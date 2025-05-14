@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+  .card-hover {
+    transition: all 0.3s ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+</style>
+
+<div class="container py-4">
+
+  <!-- 🔍 Campo de busca -->
+  <form method="GET" action="{% url 'cars_list' %}" class="d-flex justify-content-center mb-4">
+    <input type="text" name="search" class="form-control w-50 me-2" placeholder="Buscar carro...">
+    <button type="submit" class="btn btn-primary">Buscar</button>
+  </form>
+
+<!-- 🧭 INÍCIO DO BLOCO DE FILTRO (COMBOBOX DE ORDENAÇÃO) -->
+<div class="container mb-4">
+  <form method="GET" action="{% url 'cars_list' %}" class="row justify-content-center">
+    <div class="col-md-4">
+      <label for="carro" class="form-label fw-bold">Ordenar por:</label>
+      <div class="input-group">
+        <select id="carro" name="orderby" class="form-select">
+          <option value="-brand" {% if request.GET.orderby == "-brand" %}selected{% endif %}>Marca A-Z</option>
+          <option value="brand" {% if request.GET.orderby == "brand" %}selected{% endif %}>Marca Z-A</option>
+          <option value="value" {% if request.GET.orderby == "value" %}selected{% endif %}>Menor Preço</option>
+          <option value="-value" {% if request.GET.orderby == "-value" %}selected{% endif %}>Maior Preço</option>
+        </select>
+
+        <!-- Campo oculto para manter o valor da busca -->
+        {% if request.GET.search %}
+          <input type="hidden" name="search" value="{{ request.GET.search }}">
+        {% endif %}
+
+        <!-- Botão de envio -->
+        <button type="submit" class="btn btn-primary ms-2">Aplicar</button>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- 🧭 FIM DO BLOCO DE FILTRO -->
+
+
+  <!-- 🖼️ Cards de carros -->
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% if cars %}
+      {% for car in cars %}
+        <div class="col">
+          <a href="{% url 'car_detail' car.id %}" class="card h-100 shadow-sm card-hover text-decoration-none">
+            {% if car.photo %}
+              <img src="{{ car.photo.url }}" class="card-img-top" alt="{{ car.model }} - {{ car.brand }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+              <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-muted" style="height: 200px;">
+                <span>Foto não disponível</span>
+              </div>
+            {% endif %}
+            <div class="card-body text-center">
+              <h5 class="card-title">{{ car.brand }} {{ car.model }}</h5>
+              <p class="card-text">{{ car.factory_year }} - R$ {{ car.value }}</p>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="col-12">
+        <p class="text-center fs-5">Nenhum carro encontrado.</p>
+      </div>
+    {% endif %}
+  </div>
+
+</div>
+
+{% endblock %}

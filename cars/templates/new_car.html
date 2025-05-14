@@ -1,0 +1,16 @@
+{% extends "cars.html" %}
+
+{% block content %}
+
+    <form  method="post" enctype="multipart/form-data" action="{% url 'new_car' %}">
+    
+    {% csrf_token %} 
+        
+    <table>
+        {{form.as_table }}
+    </table>
+
+    <input type="submit" value="Cadastrar" class="btn btn-primary">
+            
+    </form>
+{% endblock  %}

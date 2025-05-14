@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="card shadow-sm border-light rounded" style="max-width: 500px; margin: 0 auto;">
+      {%if object.photo%}
+      <img src="{{ object.photo.url }}" class="card-img-top" alt="{{ object.model }} - {{ object.brand }}" style="height: 200px; object-fit: cover;">
+          {%else%}
+            <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-muted" style="height: 200px;">
+    <span>Foto não disponível</span>
+  </div>
+
+      {%endif%}
+      <div class="card-body text-center">
+        <h2 class="card-title">{{ object.brand }} {{ object.model }}</h2>
+        <p class="card-text"><strong>Ano de fabricação:</strong> {{ object.factory_year }}</p>
+        <p class="card-text"><strong>Ano do modelo:</strong> {{ object.model_year }}</p>
+        <p class="card-text"><strong>Placa:</strong> {{ object.plate }}</p>
+        <p class="card-text"><strong>Preço:</strong> R$ {{ object.value }}</p>
+        {% if object.bio %}
+        <p class="card-text"><strong>Bio:</strong> {{ object.bio }}</p>
+
+        {%endif%}
+      </div>
+        {% if user.is_authenticated %}
+      <div class="card-footer text-center">
+        <div class="btn-group" role="group"> 
+             <a href="{% url 'car_update' pk=object.pk %}" class="btn btn-primary">Editar</a>
+        </div>
+        <div class="btn-group" role="group"> 
+             <a href="{% url 'car_delete' pk=object.pk %}" class="btn btn-danger">Eliminar</a>
+        </div>
+        {%endif%}
+
+      </div>
+    </div>
+  </div>
+{% endblock %}
