@@ -21,13 +21,13 @@
     <button type="submit" class="btn btn-primary">Buscar</button>
   </form>
 
-<!-- 🧭 INÍCIO DO BLOCO DE FILTRO (COMBOBOX DE ORDENAÇÃO) -->
+<!-- 🧭 INÍCIO DO BLOCO DE FILTRO (COMBOBOX DE ORDENAÇÃO AUTOMÁTICA) -->
 <div class="container mb-4">
-  <form method="GET" action="{% url 'cars_list' %}" class="row justify-content-center">
+  <form method="GET" action="{% url 'cars_list' %}" class="row justify-content-center" id="filterForm">
     <div class="col-md-4">
       <label for="carro" class="form-label fw-bold">Ordenar por:</label>
       <div class="input-group">
-        <select id="carro" name="orderby" class="form-select">
+        <select id="carro" name="orderby" class="form-select" onchange="document.getElementById('filterForm').submit()">
           <option value="-brand" {% if request.GET.orderby == "-brand" %}selected{% endif %}>Marca A-Z</option>
           <option value="brand" {% if request.GET.orderby == "brand" %}selected{% endif %}>Marca Z-A</option>
           <option value="value" {% if request.GET.orderby == "value" %}selected{% endif %}>Menor Preço</option>
@@ -38,9 +38,6 @@
         {% if request.GET.search %}
           <input type="hidden" name="search" value="{{ request.GET.search }}">
         {% endif %}
-
-        <!-- Botão de envio -->
-        <button type="submit" class="btn btn-primary ms-2">Aplicar</button>
       </div>
     </div>
   </form>
